@@ -43,30 +43,41 @@ let initialData = [
 
 const Home = () => {
   const [countdown, setCountdown] = useState(false);
-  const [data, setData] = useState(initialData);
-  let [touch, setTouch] = useState(true)
+  const [data, setData] = useState([]);
   const buzz = new Audio(buz);
 
- useEffect(() => {
-   
-   document.addEventListener("keydown", function (event) {
-     if (event.key === "q" && touch) {
-       select("1")
-     }
-     if (event.key === "w" && touch) {
-       select("2");
-     }
-     if (event.key === "e" && touch) {
-       select("3");
-     }
-     if (event.key === "r" && touch) {
-       select("4");
-     }
-     if (event.key === "t" && touch) {
-       select("5");
-     }
-   });
- }, [])
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem("data"));
+    if (items) {
+      setData(items);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("data", JSON.stringify(data));
+  }, [data]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", touchKey);
+  }, []);
+
+  function touchKey(event) {
+    if (event.key === "q") {
+      select("1");
+    }
+    if (event.key === "w") {
+      select("2");
+    }
+    if (event.key === "e") {
+      select("3");
+    }
+    if (event.key === "r") {
+      select("4");
+    }
+    if (event.key === "t") {
+      select("5");
+    }
+  }
 
   const count = countdown ? (
     <Countdown rootClassName="countdown-root-class-name"></Countdown>
@@ -75,38 +86,38 @@ const Home = () => {
   );
 
   function select(id) {
-    const mydata = [...data]
-    const getindex = mydata.findIndex((da) => da.id == id);
-    mydata[getindex].select = true
-    setData(mydata)
-    buzz.play()
-    console.log(touch)
+      const mydata = [...data];
+      const getindex = mydata.findIndex((da) => da.id == id);
+      const select = mydata[getindex].select;
+      mydata[getindex].select = !select;
+      setData(mydata);
+      buzz.play();
+      console.log(mydata[getindex].select);
   }
 
   function addPoint(id, point) {
-    const mydata = [...data]
-    const getindex = mydata.findIndex((da) => (da.id == id));
-    const nilaiawal = data[getindex].score
-    mydata[getindex].score = nilaiawal + point
+    const mydata = [...data];
+    const getindex = mydata.findIndex((da) => da.id == id);
+    const nilaiawal = data[getindex].score;
+    mydata[getindex].score = nilaiawal + point;
     setData(mydata);
   }
 
-   function subPoint(id, point) {
-     const mydata = [...data];
-     const getindex = mydata.findIndex((da) => da.id == id);
-     const nilaiawal = data[getindex].score;
-     mydata[getindex].score = nilaiawal - point;
-     setData(mydata);
-   }
-
-   function clearSelect(id) {
+  function subPoint(id, point) {
     const mydata = [...data];
     const getindex = mydata.findIndex((da) => da.id == id);
-    const select = mydata[getindex].select
-    mydata[getindex].select = !select
+    const nilaiawal = data[getindex].score;
+    mydata[getindex].score = nilaiawal - point;
     setData(mydata);
-    setTouch(true)
-   }
+  }
+
+  function clearSelect(id) {
+    const mydata = [...data];
+    const getindex = mydata.findIndex((da) => da.id == id);
+    const select = mydata[getindex].select;
+    mydata[getindex].select = !select;
+    setData(mydata);
+  }
 
   return (
     <div className="home-container">
@@ -137,10 +148,15 @@ const Home = () => {
           </div>
         </div>
       </header>
-      <ListTeam data={data} onAdd={addPoint}onSub={subPoint} clear={clearSelect}/>
+      <ListTeam
+        data={data}
+        onAdd={addPoint}
+        onSub={subPoint}
+        clear={clearSelect}
+      />
       {count}
     </div>
-  ); 
+  );
 };
 
 export function ListTeam({ data, onAdd, onSub, clear }) {
