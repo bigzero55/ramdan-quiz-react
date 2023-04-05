@@ -43,41 +43,29 @@ let initialData = [
 
 const Home = () => {
   const [countdown, setCountdown] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(initialData);
+  let [touch, setTouch] = useState(true);
   const buzz = new Audio(buz);
 
   useEffect(() => {
-    const items = JSON.parse(localStorage.getItem("data"));
-    if (items) {
-      setData(items);
-    }
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "q" && touch) {
+        select("1");
+      }
+      if (event.key === "w" && touch) {
+        select("2");
+      }
+      if (event.key === "e" && touch) {
+        select("3");
+      }
+      if (event.key === "r" && touch) {
+        select("4");
+      }
+      if (event.key === "t" && touch) {
+        select("5");
+      }
+    });
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(data));
-  }, [data]);
-
-  useEffect(() => {
-    document.addEventListener("keydown", touchKey);
-  }, []);
-
-  function touchKey(event) {
-    if (event.key === "q") {
-      select("1");
-    }
-    if (event.key === "w") {
-      select("2");
-    }
-    if (event.key === "e") {
-      select("3");
-    }
-    if (event.key === "r") {
-      select("4");
-    }
-    if (event.key === "t") {
-      select("5");
-    }
-  }
 
   const count = countdown ? (
     <Countdown rootClassName="countdown-root-class-name"></Countdown>
@@ -86,13 +74,12 @@ const Home = () => {
   );
 
   function select(id) {
-      const mydata = [...data];
-      const getindex = mydata.findIndex((da) => da.id == id);
-      const select = mydata[getindex].select;
-      mydata[getindex].select = !select;
-      setData(mydata);
-      buzz.play();
-      console.log(mydata[getindex].select);
+    const mydata = [...data];
+    const getindex = mydata.findIndex((da) => da.id == id);
+    mydata[getindex].select = true;
+    setData(mydata);
+    buzz.play();
+    console.log(touch);
   }
 
   function addPoint(id, point) {
@@ -117,6 +104,7 @@ const Home = () => {
     const select = mydata[getindex].select;
     mydata[getindex].select = !select;
     setData(mydata);
+    setTouch(true);
   }
 
   return (
