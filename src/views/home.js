@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Helmet } from "react-helmet";
-import buz from "../audio/buzz.wav";
+import buz from "../audio/buzz2.wav";
 
 import NavigationLinks from "../components/navigation-links";
 import Team from "../components/team";
@@ -46,7 +46,6 @@ const Home = () => {
   const [data, setData] = useState(initialData);
   let [touch, setTouch] = useState(true);
   const buzz = new Audio(buz);
-
   useEffect(() => {
     document.addEventListener("keydown", function (event) {
       if (event.key === "q" && touch) {
