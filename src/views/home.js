@@ -44,22 +44,44 @@ let initialData = [
 const Home = () => {
   const [countdown, setCountdown] = useState(false);
   const [data, setData] = useState(initialData);
+  let [touch, setTouch] = useState(true)
+  const buzz = new Audio(buz);
 
-  useEffect(() => {
-    const buzz = new Audio(buz);
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "d") {
-        buzz.play();
-        console.log("huruf d");
-      }
-    });
-  }, []);
+ useEffect(() => {
+   
+   document.addEventListener("keydown", function (event) {
+     if (event.key === "q" && touch) {
+       select("1")
+     }
+     if (event.key === "w" && touch) {
+       select("2");
+     }
+     if (event.key === "e" && touch) {
+       select("3");
+     }
+     if (event.key === "r" && touch) {
+       select("4");
+     }
+     if (event.key === "t" && touch) {
+       select("5");
+     }
+   });
+ }, [])
 
   const count = countdown ? (
     <Countdown rootClassName="countdown-root-class-name"></Countdown>
   ) : (
     ""
   );
+
+  function select(id) {
+    const mydata = [...data]
+    const getindex = mydata.findIndex((da) => da.id == id);
+    mydata[getindex].select = true
+    setData(mydata)
+    buzz.play()
+    console.log(touch)
+  }
 
   function addPoint(id, point) {
     const mydata = [...data]
@@ -75,6 +97,15 @@ const Home = () => {
      const nilaiawal = data[getindex].score;
      mydata[getindex].score = nilaiawal - point;
      setData(mydata);
+   }
+
+   function clearSelect(id) {
+    const mydata = [...data];
+    const getindex = mydata.findIndex((da) => da.id == id);
+    const select = mydata[getindex].select
+    mydata[getindex].select = !select
+    setData(mydata);
+    setTouch(true)
    }
 
   return (
@@ -106,17 +137,18 @@ const Home = () => {
           </div>
         </div>
       </header>
-      <ListTeam data={data} onAdd={addPoint}onSub={subPoint}/>
+      <ListTeam data={data} onAdd={addPoint}onSub={subPoint} clear={clearSelect}/>
       {count}
     </div>
   ); 
 };
 
-export function ListTeam({ data, onAdd, onSub }) {
+export function ListTeam({ data, onAdd, onSub, clear }) {
   return (
     <div className="home-container1">
       {data.map((da) => (
         <Team
+          clear={() => clear(da.id)}
           key={da.id}
           team={da.team}
           score={da.score}

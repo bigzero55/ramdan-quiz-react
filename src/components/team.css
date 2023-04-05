@@ -16,7 +16,11 @@
   height: var(--dl-size-size-medium);
 }
 
-
+.urut {
+  font-size: 30px;
+  color: rgb(119, 0, 255);
+  
+}
 
 
 .box {
