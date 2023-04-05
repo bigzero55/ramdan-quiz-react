@@ -80,6 +80,7 @@ const Home = () => {
     setData(mydata);
     buzz.play();
     console.log(touch);
+    setTouch(false)
   }
 
   function addPoint(id, point) {
