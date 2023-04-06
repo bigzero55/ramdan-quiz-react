@@ -1,67 +1,48 @@
 import React, { useState, useEffect } from "react";
 
 import { Helmet } from "react-helmet";
-import buz from "../audio/buzz2.wav";
+import buz from "../audio/bell.wav";
 
 import NavigationLinks from "../components/navigation-links";
 import Team from "../components/team";
 import Countdown from "../components/countdown";
 import "./home.css";
-
-let initialData = [
-  {
-    id: "1",
-    team: "sdfsd",
-    score: 0,
-    select: false,
-  },
-  {
-    id: "2",
-    team: "sdf",
-    score: 0,
-    select: false,
-  },
-  {
-    id: "3",
-    team: "sdfr",
-    score: 0,
-    select: false,
-  },
-  {
-    id: "4",
-    team: "asar",
-    score: 0,
-    select: false,
-  },
-  {
-    id: "5",
-    team: "asd",
-    score: 0,
-    select: false,
-  },
-];
+import initialData from "../libs/initialData";
 
 const Home = () => {
   const [countdown, setCountdown] = useState(false);
   const [data, setData] = useState(initialData);
-  let [touch, setTouch] = useState(true);
+  let serial = 0;
   const buzz = new Audio(buz);
+
   useEffect(() => {
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "q" && touch) {
-        select("1");
+    window.addEventListener("keydown", function (event) {
+      if (event.key === "q") {
+        serial = serial + 1;
+        select("1", serial);
       }
-      if (event.key === "w" && touch) {
-        select("2");
+      if (event.key === "w") {
+        serial = serial + 1;
+        select("2", serial);
       }
-      if (event.key === "e" && touch) {
-        select("3");
+      if (event.key === "e") {
+        serial = serial + 1;
+        select("3", serial);
       }
-      if (event.key === "r" && touch) {
-        select("4");
+      if (event.key === "r") {
+        serial = serial + 1;
+        select("4", serial);
       }
-      if (event.key === "t" && touch) {
-        select("5");
+      if (event.key === "t") {
+        serial = serial + 1;
+        select("5", serial);
+      }
+      if (event.key === "a") {
+        clearSelect();
+        serial = 0;
+      }
+      if (event.key === "z") {
+        setCountdown((n) => (n = !n));
       }
     });
   }, []);
@@ -72,14 +53,15 @@ const Home = () => {
     ""
   );
 
-  function select(id) {
+  function select(id, serial) {
     const mydata = [...data];
     const getindex = mydata.findIndex((da) => da.id == id);
-    mydata[getindex].select = true;
-    setData(mydata);
-    buzz.play();
-    console.log(touch);
-    setTouch(false)
+    if (mydata[getindex].select != true) {
+      buzz.play();
+      mydata[getindex].select = true;
+      mydata[getindex].serial = serial;
+      setData(mydata);
+    }
   }
 
   function addPoint(id, point) {
@@ -98,13 +80,16 @@ const Home = () => {
     setData(mydata);
   }
 
-  function clearSelect(id) {
+  function clearSelect() {
     const mydata = [...data];
-    const getindex = mydata.findIndex((da) => da.id == id);
-    const select = mydata[getindex].select;
-    mydata[getindex].select = !select;
+    mydata.map((da) => {
+      da.select = false;
+    });
+    mydata.map((da) => {
+      da.serial = 0;
+    });
     setData(mydata);
-    setTouch(true);
+    serial = 0
   }
 
   return (
@@ -147,18 +132,18 @@ const Home = () => {
   );
 };
 
-export function ListTeam({ data, onAdd, onSub, clear }) {
+export function ListTeam({ data, onAdd, onSub }) {
   return (
     <div className="home-container1">
       {data.map((da) => (
         <Team
-          clear={() => clear(da.id)}
           key={da.id}
           team={da.team}
           score={da.score}
           onAdd={() => onAdd(da.id, 100)}
           onSub={() => onSub(da.id, 100)}
           select={da.select}
+          serial={da.serial}
         />
       ))}
     </div>
