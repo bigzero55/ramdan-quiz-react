@@ -1,39 +1,39 @@
 const initialData = [
   {
     id: "1",
-    team: "nama klompok",
+    team: "kelompok 1",
     score: 0,
     select: false,
     serial: 0,
   },
   {
     id: "2",
-    team: "sdf",
+    team: "kelompok 2",
     score: 0,
     select: false,
     serial: 0,
   },
   {
     id: "3",
-    team: "sdfr",
+    team: "kelompok 3",
     score: 0,
     select: false,
     serial: 0,
   },
   {
     id: "4",
-    team: "asar",
+    team: "kelompok 4",
     score: 0,
     select: false,
     serial: 0,
   },
   {
     id: "5",
-    team: "asd",
+    team: "kelompok 5",
     score: 0,
     select: false,
     serial: 0,
   },
 ];
 
-export default initialData
+export default initialData;

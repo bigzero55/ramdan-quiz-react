@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import nit from '../audio/count-s.wav'
+import nit from "../audio/count-s.wav";
+import teet from "../audio/timeout.wav";
 
 import "./countdown.css";
 
@@ -17,20 +18,23 @@ const Countdown = (props) => {
     setIsActive(false);
   }
 
-  const Nit = new Audio(nit)
+  const Nit = new Audio(nit);
+  const Teet = new Audio(teet);
 
   useEffect(() => {
+    if (seconds == 0) {
+      Teet.play();
+    }
     let interval = null;
     if (isActive && seconds != 0) {
       interval = setInterval(() => {
         setSeconds((seconds) => seconds - 1);
-        Nit.play()
+        Nit.play();
       }, 1000);
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-
   }, [isActive, seconds]);
 
   return (

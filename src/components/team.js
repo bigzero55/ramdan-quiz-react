@@ -6,11 +6,14 @@ import "./team.css";
 
 const Team = (props) => {
   const { team, score, onAdd, onSub, select, serial } = props;
+
   return (
     <div className={`team-feature-card ${select && "box"}`}>
-      <div>
-        <h1 className="urut">{serial}</h1>
-      </div>
+      {Number(serial) > 0 && (
+        <div style={{ flexDirection: "row" }}>
+          <h1 className="urut"> Urutan ke - {serial}</h1>
+        </div>
+      )}
       <svg viewBox="0 0 1024 1024" className="team-icon">
         <path d="M512 597.333c117.931 0 213.333-95.488 213.333-213.333s-95.403-213.333-213.333-213.333-213.333 95.488-213.333 213.333 95.403 213.333 213.333 213.333zM512 256c70.571 0 128 57.429 128 128s-57.429 128-128 128-128-57.429-128-128 57.429-128 128-128z"></path>
         <path d="M853.333 640c58.923 0 106.667-47.659 106.667-106.667 0-58.923-47.744-106.667-106.667-106.667-58.965 0-106.667 47.744-106.667 106.667 0 59.008 47.701 106.667 106.667 106.667zM853.333 469.333c35.285 0 64 28.715 64 64s-28.715 64-64 64-64-28.715-64-64 28.715-64 64-64z"></path>
@@ -37,7 +40,7 @@ Team.defaultProps = {
   button: "+",
   score: "0",
   select: false,
-  serial: 0
+  serial: 0,
 };
 
 Team.propTypes = {

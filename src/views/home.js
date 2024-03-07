@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
-
 import { Helmet } from "react-helmet";
 import buz from "../audio/bell.wav";
-
 import NavigationLinks from "../components/navigation-links";
 import Team from "../components/team";
 import Countdown from "../components/countdown";
 import "./home.css";
 import initialData from "../libs/initialData";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
+import audioBenar from "../audio/benar.mp3";
+import audioSalah from "../audio/salah.wav";
 
 const Home = () => {
   const [countdown, setCountdown] = useState(false);
   const [data, setData] = useState(initialData);
   let serial = 0;
   const buzz = new Audio(buz);
+  const Aubenar = new Audio(audioBenar);
+  const AuSalah = new Audio(audioSalah);
+  const { width, height } = useWindowSize();
+  const [benar, setBenar] = useState(false);
 
   useEffect(() => {
     window.addEventListener("keydown", function (event) {
@@ -43,6 +49,18 @@ const Home = () => {
       }
       if (event.key === "z") {
         setCountdown((n) => (n = !n));
+      }
+      if (event.key === "v") {
+        setBenar(true);
+        Aubenar.play();
+      }
+      if (event.key === "x") {
+        setBenar(false);
+        Aubenar.pause();
+        Aubenar.currentTime = 0;
+      }
+      if (event.key === "s") {
+        AuSalah.play();
       }
     });
   }, []);
@@ -89,11 +107,12 @@ const Home = () => {
       da.serial = 0;
     });
     setData(mydata);
-    serial = 0
+    serial = 0;
   }
 
   return (
     <div className="home-container">
+      {benar && <Confetti width={width} height={height} />}
       <Helmet>
         <title>Ramadhan Quiz</title>
         <meta property="og:title" content="Tricky Qualified Trout" />
